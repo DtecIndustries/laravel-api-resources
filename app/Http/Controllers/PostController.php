@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Post;
+use App\Http\Resources\Post as PostResource;
 
 class PostController extends Controller
 {
@@ -17,7 +18,7 @@ class PostController extends Controller
     {
         // get posts
         $posts = Post::paginate(15);
-        return $posts;
+        return PostResource::collection($posts);
     }
 
     /**
@@ -35,7 +36,7 @@ class PostController extends Controller
         $post->body = $request->input('body');
 
         if($post->save()){
-            return $post;
+            return new PostResource($post);
         }
     }
 
@@ -49,7 +50,7 @@ class PostController extends Controller
     {
         //get post
         $post = Post::findOrFail($id);
-        return $post;
+        return new PostResource($post);
     }
 
     /**
@@ -64,7 +65,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         if($post->delete()){
-            return $post;
+            return new PostResource($post);
         }
     }
 }
